@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "542651070691",
+    "project_id": "tratto-2025",
+    "storage_bucket": "tratto-2025.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542651070691:android:816e6fa2042d1941fb6dd6",
+        "android_client_info": {
+          "package_name": "com.example.gestao_beleza_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCimruH_-FxGpZe5PlyEFg3IL87AeoAHjI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542651070691:android:a544eb946710ea03fb6dd6",
+        "android_client_info": {
+          "package_name": "tratto.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCimruH_-FxGpZe5PlyEFg3IL87AeoAHjI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
