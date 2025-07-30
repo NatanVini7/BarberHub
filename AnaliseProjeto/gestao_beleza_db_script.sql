@@ -569,6 +569,39 @@ CREATE TABLE IF NOT EXISTS `gestao_beleza_db`.`fichas_anamnese` (
     ON DELETE RESTRICT
 ) ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS `gestao_beleza_db`.`servico_variacoes` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `id_servico` INT NOT NULL COMMENT 'Chave estrangeira para a tabela "servicos" (o serviço pai).',
+  `nome_variacao` VARCHAR(100) NOT NULL COMMENT 'Ex: "Cabelo Curto", "Cabelo Médio", "Cabelo Longo e Volumoso".',
+  `descricao` TEXT NULL,
+  `preco` DECIMAL(10, 2) NOT NULL,
+  `duracao_minutos` INT NOT NULL,
+  `ordem_exibicao` INT NOT NULL DEFAULT 0,
+  `esta_ativo` BOOLEAN NOT NULL DEFAULT TRUE,
+  PRIMARY KEY (`id`),
+  INDEX `fk_variacao_servico_idx` (`id_servico` ASC) VISIBLE,
+  CONSTRAINT `fk_variacao_servico`
+    FOREIGN KEY (`id_servico`)
+    REFERENCES `gestao_beleza_db`.`servicos` (`id`)
+    ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+-- Torna as colunas opcionais na tabela de serviços
+ALTER TABLE `gestao_beleza_db`.`servicos` 
+MODIFY COLUMN `preco` DECIMAL(10, 2) NULL,
+MODIFY COLUMN `duracao_minutos` INT NULL;
+
+-- Adiciona a chave estrangeira para a variação na tabela de agendamentos
+ALTER TABLE `gestao_beleza_db`.`agendamentos` 
+ADD COLUMN `id_servico_variacao` INT NULL AFTER `id_servico`,
+ADD INDEX `fk_agendamento_variacao_idx` (`id_servico_variacao` ASC) VISIBLE;
+
+ALTER TABLE `gestao_beleza_db`.`agendamentos`
+ADD CONSTRAINT `fk_agendamento_variacao`
+  FOREIGN KEY (`id_servico_variacao`)
+  REFERENCES `gestao_beleza_db`.`servico_variacoes` (`id`)
+  ON DELETE RESTRICT;
+
 -- Finaliza o script restaurando as configurações originais do ambiente.
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
