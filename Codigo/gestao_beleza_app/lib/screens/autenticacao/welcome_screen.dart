@@ -65,7 +65,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             controller: _pageController,
             // A função onPageChanged é chamada sempre que a página muda (seja pelo timer ou pelo usuário)
             onPageChanged: (int page) {
-              //setState para notificar o Flutter que o estado mudou e a tela precisa ser redesenhada
               setState(() {
                 _currentPage = page;
               });

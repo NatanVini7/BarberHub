@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gestao_beleza_app/screens/autenticacao/home_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '/services/autenticacao_service/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -10,7 +12,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Variáveis de estado para controlar a UI
   bool _passwordVisible = false;
   bool _rememberMe = false;
   final _formKey = GlobalKey<FormState>();
@@ -20,22 +21,35 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    // Limpa os controllers quando o widget é descartado para liberar memória
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  void _showErrorDialog(String message) {
-    // Tratamento de mensagens de erro comuns do Firebase para serem mais amigáveis
-    String friendlyMessage = 'Ocorreu um erro. Tente novamente.';
-    if (message.contains('Credenciais inválidas') ||
-        message.contains('INVALID_EMAIL')) {
-      friendlyMessage =
-          'Email ou senha inválidos. Por favor, verifique suas credenciais.';
-    } else if (message.contains('Erro desconhecido')) {
-      friendlyMessage =
-          'Não foi possível conectar. Verifique sua conexão com a internet.';
+  void _showErrorDialog(String errorCode) {
+    String friendlyMessage = 'Ocorreu um erro. Tente novamente mais tarde.';
+
+    switch (errorCode) {
+      case 'invalid-credential':
+      case 'user-not-found':
+      case 'wrong-password':
+        friendlyMessage =
+            'Email ou senha inválidos. Por favor, verifique e tente novamente.';
+        break;
+      case 'invalid-email':
+        friendlyMessage = 'O formato do email é inválido.';
+        break;
+      case 'user-disabled':
+        friendlyMessage = 'Esta conta de usuário foi desabilitada.';
+        break;
+      case 'network-request-failed':
+        friendlyMessage =
+            'Não foi possível conectar. Verifique sua conexão com a internet.';
+        break;
+      default:
+        print('CÓDIGO DE ERRO NÃO TRATADO: $errorCode');
+        friendlyMessage = 'Ocorreu um erro inesperado. Tente novamente.';
+        break;
     }
 
     showDialog(
@@ -56,9 +70,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _submit() async {
-    // Verifica se o formulário é válido
     if (!_formKey.currentState!.validate()) {
-      return; // Se não for, interrompe a execução
+      return;
     }
     // Salva os dados do formulário
     _formKey.currentState!.save();
@@ -69,14 +82,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       // Chama o método de login do nosso AuthService
-      await Provider.of<AuthService>(context, listen: false).login(
-        _emailController.text.trim(), //.trim() para remover espaços em branco
-        _passwordController.text.trim(),
-      );
-    } catch (error) {
+      await Provider.of<AuthService>(
+        context,
+        listen: false,
+      ).login(_emailController.text.trim(), _passwordController.text.trim());
+
+      // Após o login bem-sucedido, limpamos a pilha e vamos para a HomeScreen.
       if (mounted) {
-        _showErrorDialog(error.toString());
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          (Route<dynamic> route) => false,
+        );
       }
+    } on FirebaseAuthException catch (e) {
+      _showErrorDialog(e.code);
+    } catch (error) {
+      _showErrorDialog('Erro desconhecido');
     }
     // Apenas atualiza o estado se o widget ainda estiver montado
     if (mounted) {
