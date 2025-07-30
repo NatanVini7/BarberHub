@@ -1,36 +1,47 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthService with ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  User? _user;
+  late StreamSubscription<User?> _authSubscription;
 
-  // O Stream que o Wrapper já está ouvindo.
-  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
+  AuthService() {
+    _authSubscription = _firebaseAuth.authStateChanges().listen(_onAuthStateChanged);
+  }
 
-  // Método de login usando o Firebase
+  User? get user => _user;
+  bool get isAuth => _user != null;
+
+  void _onAuthStateChanged(User? user) {
+    _user = user;
+    notifyListeners();
+  }
+
   Future<void> login(String email, String password) async {
-    // O try/catch agora está dentro do _submit da tela de login,
-    // então podemos simplesmente deixar a exceção subir.
     await _firebaseAuth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
-    // Não precisamos do notifyListeners(), o stream authStateChanges cuida disso.
   }
 
-  // Método de registro usando o Firebase
   Future<void> register(String name, String email, String password) async {
     UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
-    // Opcional: Salva o nome do usuário no perfil do Firebase
     await userCredential.user?.updateDisplayName(name);
   }
   
-  // Método de logout usando o Firebase
   Future<void> logout() async {
     await _firebaseAuth.signOut();
-    // O stream authStateChanges vai emitir 'null' automaticamente.
+  }
+
+  // É crucial cancelar a inscrição do stream para evitar vazamento de memória
+  @override
+  void dispose() {
+    _authSubscription.cancel();
+    super.dispose();
   }
 }
