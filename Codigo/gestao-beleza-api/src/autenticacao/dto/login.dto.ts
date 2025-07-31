@@ -5,7 +5,7 @@ export class LoginDto {
   @IsEmail({}, { message: 'Por favor, insira um email válido.' })
   email: string;
 
-  @IsNotEmpty({ message: 'A senha не pode estar vazia.' })
+  @IsNotEmpty({ message: 'A senha não pode estar vazia.' })
   @IsString()
   senha: string;
 }
