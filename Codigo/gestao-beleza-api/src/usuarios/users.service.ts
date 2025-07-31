@@ -1,13 +1,11 @@
-// src/users/users.service.ts
-
 import { ConflictException, Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { RegisterDto } from '../auth/dto/register.dto';
+import { PrismaService } from '../../prisma/prisma.service';
+import { RegisterDto } from '../autenticacao/dto/register.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(registerDto: RegisterDto) {
     // Verifica se o email já existe
@@ -42,12 +40,12 @@ export class UsersService {
       },
     });
 
-    // 1. Verifica se 'usuario' existe para satisfazer o TypeScript
+    // Verifica se 'usuario' existe para satisfazer o TypeScript
     if (pessoa.usuario) {
-      // 2. Usa a desestruturação para separar a senha do resto do objeto
+      // Usa a desestruturação para separar a senha do resto do objeto
       const { senha, ...usuarioSemSenha } = pessoa.usuario;
-      
-      // 3. Cria um objeto de resposta final, combinando 'pessoa' com o 'usuario' sem a senha
+
+      // Cria um objeto de resposta final, combinando 'pessoa' com o 'usuario' sem a senha
       const resultadoFinal = {
         ...pessoa,
         usuario: usuarioSemSenha,
@@ -55,7 +53,7 @@ export class UsersService {
 
       return resultadoFinal;
     }
-    
+
     return pessoa;
   }
 }

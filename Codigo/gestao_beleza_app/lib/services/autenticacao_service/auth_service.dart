@@ -8,7 +8,9 @@ class AuthService with ChangeNotifier {
   late StreamSubscription<User?> _authSubscription;
 
   AuthService() {
-    _authSubscription = _firebaseAuth.authStateChanges().listen(_onAuthStateChanged);
+    _authSubscription = _firebaseAuth.authStateChanges().listen(
+      _onAuthStateChanged,
+    );
   }
 
   User? get user => _user;
@@ -27,13 +29,11 @@ class AuthService with ChangeNotifier {
   }
 
   Future<void> register(String name, String email, String password) async {
-    UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    UserCredential userCredential = await _firebaseAuth
+        .createUserWithEmailAndPassword(email: email, password: password);
     await userCredential.user?.updateDisplayName(name);
   }
-  
+
   Future<void> logout() async {
     await _firebaseAuth.signOut();
   }
@@ -43,5 +43,14 @@ class AuthService with ChangeNotifier {
   void dispose() {
     _authSubscription.cancel();
     super.dispose();
+  }
+
+  Future<String?> getFirebaseIdToken() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final idToken = await user.getIdToken();
+      return idToken;
+    }
+    return null;
   }
 }
