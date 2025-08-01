@@ -17,6 +17,7 @@ dependencies:
   provider: ^6.1.5
   firebase_core: ^2.32.0 
   firebase_auth: ^4.20.0 
+  jwt_decoder: ^2.0.1
 
 dev_dependencies:
   flutter_test:

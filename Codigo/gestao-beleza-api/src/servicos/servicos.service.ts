@@ -29,20 +29,20 @@ export class ServicosService {
         return servico;
     }
 
-    create(CreateServicoDto: CreateServicoDto, id_estabelecimento: number) {
+    async create(createServicoDto: CreateServicoDto, id_estabelecimento: number) {
         return this.prisma.servicos.create({
             data: {
-                ...CreateServicoDto,
+                ...createServicoDto,
                 id_estabelecimento,
             }
         });
     }
 
-    async update(id: number, UpdateServicoDto: UpdateServicoDto, id_estabelecimento: number) {
+    async update(id: number, updateServicoDto: UpdateServicoDto, id_estabelecimento: number) {
         await this.findOne(id, id_estabelecimento);
         return this.prisma.servicos.update({
             where: { id: id },
-            data: UpdateServicoDto,
+            data: updateServicoDto,
         });
     }
 
