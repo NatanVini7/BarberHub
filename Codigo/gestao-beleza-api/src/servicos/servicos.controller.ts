@@ -1,13 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, 
     Req, ParseIntPipe, UnauthorizedException, ForbiddenException} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { FirebaseAuthGuard } from '../autenticacao/firebase-auth.guard';
 import { ServicosService } from './servicos.service';
 import { PrismaService } from 'prisma/prisma.service';
 import { Request } from 'express';
 import { CreateServicoDto } from './dto/create-servico.dto';
 import { UpdateServicoDto } from './dto/update-servico.dto';
 
-@UseGuards(AuthGuard('firebase'))
+@UseGuards(FirebaseAuthGuard)
 @Controller('servicos')
 export class ServicosController {
     constructor(
@@ -33,7 +33,7 @@ export class ServicosController {
     @Post()
     async create(@Body() createServicoDto: CreateServicoDto, @Req() req: Request) {
         const id_estabelecimento = await this.getIdEstabelecimentoUsuario(req);
-        return this.servicosService.findAll(id_estabelecimento);
+        return this.servicosService.create(createServicoDto, id_estabelecimento);
     }
 
     @Get()

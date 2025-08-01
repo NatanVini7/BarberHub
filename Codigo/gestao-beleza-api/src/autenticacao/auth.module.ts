@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UsersModule } from '../usuarios/users.module';
 import { PassportModule } from '@nestjs/passport';
-import { FirebaseStrategy } from './firebase.strategy';
 
 @Module({
   imports: [
@@ -11,6 +10,6 @@ import { FirebaseStrategy } from './firebase.strategy';
     PassportModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, FirebaseStrategy],
+  providers: [AuthService],
 })
 export class AuthModule { }

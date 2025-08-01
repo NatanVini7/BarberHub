@@ -3,11 +3,18 @@ import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async getDadosPerfil(id_pessoa: number) {
     const pessoa = await this.prisma.pessoas.findUnique({
       where: { id: id_pessoa },
+      include: {
+        usuario: {
+          select: {
+            email: true,
+          },
+        },
+      },
     });
 
     if (!pessoa) {
@@ -30,6 +37,7 @@ export class AuthService {
     return {
       id: pessoa.id,
       nome_completo: pessoa.nome_completo,
+      email: pessoa.usuario?.email, // Adiciona o email aqui
       documento: pessoa.documento,
       data_nascimento: pessoa.data_nascimento,
       vinculos: vinculos,

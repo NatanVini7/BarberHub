@@ -1,5 +1,5 @@
 import { Controller, Get, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { FirebaseAuthGuard } from '../autenticacao/firebase-auth.guard';
 import { Request } from 'express';
 import { AuthService } from './auth.service';
 
@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(AuthGuard('firebase')) // Usamos nosso guard do Firebase
+  @UseGuards(FirebaseAuthGuard) 
   @Get('profile')
   getProfile(@Req() req: Request) {
 
