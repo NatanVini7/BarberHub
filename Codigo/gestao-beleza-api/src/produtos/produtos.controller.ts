@@ -5,8 +5,9 @@ import { Request } from 'express';
 import { PrismaService } from 'prisma/prisma.service';
 import { CreateProdutoDto } from './dto/create-produto.dto';
 import { UpdateProdutoDto } from './dto/update-produto.dto';
+import { FirebaseAuthGuard } from '../autenticacao/firebase-auth.guard';
 
-@UseGuards(AuthGuard('firebase'))
+@UseGuards(FirebaseAuthGuard)
 @Controller('produtos')
 export class ProdutosController {
     constructor(
