@@ -1,11 +1,11 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, 
     Req, ParseIntPipe, UnauthorizedException, ForbiddenException} from '@nestjs/common';
-import { FirebaseAuthGuard } from '../autenticacao/firebase-auth.guard';
 import { ServicosService } from './servicos.service';
 import { PrismaService } from 'prisma/prisma.service';
 import { Request } from 'express';
 import { CreateServicoDto } from './dto/create-servico.dto';
 import { UpdateServicoDto } from './dto/update-servico.dto';
+import { FirebaseAuthGuard } from '../autenticacao/firebase-auth.guard';
 
 @UseGuards(FirebaseAuthGuard)
 @Controller('servicos')
