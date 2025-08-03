@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gestao_beleza_app/screens/autenticacao/welcome_screen.dart';
 import 'package:provider/provider.dart';
-import '/services/autenticacao_service/auth_service.dart'; 
-import '/screens/autenticacao/home_screen.dart';
+import '../services/auth_service.dart'; 
+import 'usuario/home_screen_cliente.dart';
 
 
 class Wrapper extends StatelessWidget {

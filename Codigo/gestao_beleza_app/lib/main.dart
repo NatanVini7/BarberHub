@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'services/autenticacao_service/auth_service.dart';
+import 'services/auth_service.dart';
+import './services/estabelecimento_service.dart';
 import '/theme/theme_notifier.dart';
 import '/theme/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '/screens/wrapper.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -20,6 +22,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => ThemeNotifier(ThemeMode.dark)),
+        ProxyProvider<AuthService, EstabelecimentoService> (
+          update: (context, authService, previous) => EstabelecimentoService(authService),
+        )
       ],
       child: Consumer<ThemeNotifier>(
         builder: (ctx, themeNotifier, child) {

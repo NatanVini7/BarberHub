@@ -37,7 +37,7 @@ export class AuthService {
     return {
       id: pessoa.id,
       nome_completo: pessoa.nome_completo,
-      email: pessoa.usuario?.email, // Adiciona o email aqui
+      email: pessoa.usuario?.email,
       documento: pessoa.documento,
       data_nascimento: pessoa.data_nascimento,
       vinculos: vinculos,

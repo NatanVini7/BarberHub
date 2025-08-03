@@ -15,7 +15,7 @@ export class ProdutosController {
         private readonly prisma: PrismaService,
     ) {}
 
-    private async getIdEstabelecimentoUsuario(req: Request): Promise<number> {
+    private async getUserEstablishmentId(req: Request): Promise<number> {
         const id_pessoa = req.user?.id_pessoa;
         const vinculo = await this.prisma.vinculos.findFirst({
             where: {
@@ -32,31 +32,31 @@ export class ProdutosController {
 
     @Post()
     async create(@Body() createProdutoDto: CreateProdutoDto, @Req() req: Request) {
-        const id_estabelecimento = await this.getIdEstabelecimentoUsuario(req);
+        const id_estabelecimento = await this.getUserEstablishmentId(req);
         return this.produtosService.create(createProdutoDto, id_estabelecimento);
     }
 
     @Get()
     async findAll(@Req() req: Request) {
-        const id_estabelecimento = await this.getIdEstabelecimentoUsuario(req);
+        const id_estabelecimento = await this.getUserEstablishmentId(req);
         return this.produtosService.findAll(id_estabelecimento);
     }
 
     @Get(':id')
     async findOne(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
-        const id_estabelecimento = await this.getIdEstabelecimentoUsuario(req);
+        const id_estabelecimento = await this.getUserEstablishmentId(req);
         return this.produtosService.findOne(id, id_estabelecimento)
     }
 
     @Patch(':id')
     async update(@Param('id', ParseIntPipe) id: number, @Body() updateProdutoDto: UpdateProdutoDto, @Req() req: Request) {
-        const id_estabelecimento = await this.getIdEstabelecimentoUsuario(req);
+        const id_estabelecimento = await this.getUserEstablishmentId(req);
         return this.produtosService.update(id, updateProdutoDto, id_estabelecimento);
     }
 
     @Delete(':id')
     async delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
-        const id_estabelecimento = await this.getIdEstabelecimentoUsuario(req);
+        const id_estabelecimento = await this.getUserEstablishmentId(req);
         const vinculo = await this.prisma.vinculos.findFirst({ where: { id_pessoa: req.user?.id_pessoa } });
         if(vinculo?.perfil !== 'admin') {
             throw new ForbiddenException('Apenas administradores podem apagar produtos.');
