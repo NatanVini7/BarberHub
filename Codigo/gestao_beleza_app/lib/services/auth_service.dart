@@ -46,7 +46,6 @@ class AuthService with ChangeNotifier {
     await _firebaseAuth.signOut();
   }
 
-  /// Retorna o Token de ID do Firebase para o usuário logado.
   Future<String?> getFirebaseIdToken() async {
     final user = _firebaseAuth.currentUser;
     if (user != null) {
