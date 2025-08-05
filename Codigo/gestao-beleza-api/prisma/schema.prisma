@@ -16,6 +16,7 @@ model estabelecimentos {
   nome_fantasia           String                     @db.VarChar(255)
   razao_social            String?                    @db.VarChar(255)
   documento               String?                    @unique(map: "documento_UNIQUE") @db.VarChar(20)
+  status                  EstabelecimentoStatus      @default(PENDENTE)
   criado_em               DateTime                   @default(now()) @db.Timestamp(0)
   atualizado_em           DateTime                   @updatedAt @db.Timestamp(0)
 
@@ -498,4 +499,11 @@ enum despesas_status {
   PENDENTE
   PAGA
   ATRASADA
+}
+
+enum EstabelecimentoStatus {
+  PENDENTE 
+  ATIVO    
+  RECUSADO 
+  INATIVO  
 }
